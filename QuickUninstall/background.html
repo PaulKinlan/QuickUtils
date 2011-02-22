@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <script>
+    
+      /*
+       We only want to monitor updates to apps so the only known way to do this 
+       at the moment is to listen as apps are uninstalled and then re-installed
+       */
+       
+      var apps = {};
+      var selected;
+      /*
+        Track all the version numbers
+      */
+      var getAllCallback = function(exts) {
+        apps = {};
+        selected = undefined; 
+        chrome.omnibox.setDefaultSuggestion(
+           { description: " " });
+
+        for(var i in exts) {
+
+          var ext = exts[i];
+          
+          apps[ext.id] = ext;
+        }
+      };
+      
+      var inputChanged = function(text, suggestionsCallback) {
+        
+        if(text == "") {
+          return;
+        }
+        
+        var suggestions = [];
+        var textlc = text.toLowerCase();
+        var re = new RegExp("("+text+")","ig");
+        var first = true;
+        
+        for(var a in apps) {
+          var app = apps[a];
+              
+          var name = app.name.toLowerCase();
+          var idx = name.indexOf(textlc);
+          if(idx > -1) {
+            var content = app.name;
+            
+            if(first) {
+              selected = app;
+              first = false;
+            }
+            
+            var description = (app.description == "") ? " " : app.description;
+            
+            if(chrome.omnibox.styleMatch) {            
+              var matchStyle = chrome.omnibox.styleMatch(idx, text.length);
+            
+              suggestions.push( 
+                {
+                  "content": content,
+                  "description" : content + " - " + description,
+                  "descriptionStyles" : [
+                    matchStyle
+                  ]
+                }
+              ); 
+            }
+            else {
+              var style = [];
+              style.push(content.substring(0, idx))
+              style.push('<match>');
+              style.push(content.substring(idx, idx+textlc.length));
+              style.push('</match>');
+              style.push(content.substring(idx+textlc.length));
+              
+              content = style.join("");
+              
+              suggestions.push( 
+                {
+                  "content": app.name,
+                  "description" : content + " - " + description
+                }
+              );
+            }
+          }
+        }
+        
+        if(suggestions.length > 0) {
+          chrome.omnibox.setDefaultSuggestion(
+            { description: suggestions[0].description });
+          suggestions.shift();
+        }
+  
+        suggestionsCallback(suggestions);
+      };
+      
+      var inputEntered = function(text) {
+        
+        var appsList = [];
+        var defaultApp = null;
+        
+        if(text == "") {
+          return;
+        }
+        
+        for(var a in apps) {
+          var app = apps[a];
+          
+          if(app.name.toLowerCase() == text.toLowerCase()) {
+            chrome.management.uninstall(app.id);            
+            return;
+          }
+        }
+        
+        // Couldn't find an exact match so launch the default element
+	if(selected) {
+          chrome.management.uninstall(selected.id);  
+        }
+
+        chrome.management.getAll(getAllCallback);
+      };
+      chrome.management.getAll(getAllCallback);
+      chrome.omnibox.onInputChanged.addListener(inputChanged);
+      chrome.omnibox.onInputEntered.addListener(inputEntered);
+      
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

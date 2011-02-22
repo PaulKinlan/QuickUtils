@@ -1,0 +1,11 @@
+{
+    "name": "Quick Enable",
+    "description": "Enables apps and extensions you have disabled, the quick way!",
+    "version": "0.0.0.1",
+    "background_page": "background.html",
+    "permissions" : ["management"],
+    "omnibox": { "keyword" : "enable" },
+    "icons" : {
+      "16" : "go.png"
+    }
+}

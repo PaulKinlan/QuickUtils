@@ -1,0 +1,11 @@
+{
+    "name": "Quick Uninstall",
+    "description": "Un-installs apps and extensions, the quick way!",
+    "version": "0.0.0.2",
+    "background_page": "background.html",
+    "permissions" : ["management"],
+    "omnibox": { "keyword" : "uninstall" },
+    "icons" : {
+      "16" : "go.png"
+    }
+}
