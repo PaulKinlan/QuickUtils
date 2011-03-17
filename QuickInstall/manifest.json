@@ -4,7 +4,6 @@
     "version": "0.0.0.5",
     "background_page": "background.html",
     "permissions" : ["management", "http://www.google.com/*", "http://www.google.co.uk/*", "http://www.google.pt/search*", "http://www.google.ca/*", "http://www.google.nl/*", "http://www.google.fr/*", "http://www.google.de/*", "http://www.google.es/*", "http://www.google.it/*", "https://chrome.google.com/webstore/search"],
-    "omnibox": { "keyword" : "install" },
     "icons" : {
       "16" : "go.png"
     },
