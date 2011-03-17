@@ -1,0 +1,39 @@
+#webstore_results__ {
+  border: solid 1px #e3cd56;
+  background-color: #ffeab4;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+#webstore_results__ h3 {
+  display: block;
+}
+
+#webstore_results__ br {
+  clear: both;
+}
+
+#webstore_results__ div {
+  float: left;
+  width: 220px;
+}
+
+#webstore_results__ img {
+  padding: 5px;
+  float: left;
+}
+
+#webstore_results__ a + span {
+  font-weight: 800;
+  display: block;
+  margin-top: 5px;
+}
+
+#webstore_results__ a + span + span {
+  display: block; 
+  font-style: italic;
+}
+
+#webstore_results__ a + span + span + span {
+  color: #999;  
+}

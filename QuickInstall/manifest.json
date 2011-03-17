@@ -1,0 +1,19 @@
+{
+    "name": "Quick Install",
+    "description": "Makes it easy to install apps", 
+    "version": "0.0.0.5",
+    "background_page": "background.html",
+    "permissions" : ["management", "http://www.google.com/*", "http://www.google.co.uk/*", "http://www.google.pt/search*", "http://www.google.ca/*", "http://www.google.nl/*", "http://www.google.fr/*", "http://www.google.de/*", "http://www.google.es/*", "http://www.google.it/*", "https://chrome.google.com/webstore/search"],
+    "omnibox": { "keyword" : "install" },
+    "icons" : {
+      "16" : "go.png"
+    },
+    "content_scripts": [ 
+      { 
+         "matches" : ["http://www.google.com/search*", "http://www.google.co.uk/search*", "http://www.google.pt/search*", "http://www.google.fr/search*", "http://www.google.de/search*", "http://www.google.nl/search*", "http://www.google.ca/search*", "http://www.google.es/search*", "http://www.google.it/search*"],
+         "css" : ["stuff.css"],
+         "js" : ["search.js"]
+      }
+    ]
+    
+}

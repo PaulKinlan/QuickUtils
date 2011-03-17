@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <script>
+    
+      /*
+       We only want to monitor updates to apps so the only known way to do this 
+       at the moment is to listen as apps are uninstalled and then re-installed
+      */
+
+  chrome.extension.onRequest.addListener(function(data, sender, sendResponse) {
+    if(data.q) {
+      searchWebstore(data.q, function(result) {
+         sendResponse(parseWebstoreSearch(result));
+      });
+    }
+  });
+
+var parseWebstoreSearch = function(text) {
+  var itemRe = new RegExp("<a class=\"title-a\" href=\"([^\"]+?)\"><span class=\"mod-tiles-item hovercard-anchor\" cxhovercard=\"([^\"]+?)\"><img class=\"mod-tiles-logo float-left\" src=\"([^\"]+?)\"><div class=\"mod-tiles-info\"><b>([^<]+)</b><div class=\"mod-tiles-category\">(.+?)</div>(.+?)</div>(.+?)","mg");
+  var output = [];
+  var root = "https://chrome.google.com";
+  var items = itemRe.exec(text);
+  var parseItem = function(reResult) {
+    return {
+      "href": root + items[1],
+      "title" : items[4],
+      "description": "",
+      "category": items[5],
+      "price" : items[6],
+      "img" : root + items[3]
+    };
+
+  };
+
+  while(items && output.length < 6) {
+    output.push(parseItem(items));
+    
+    items = itemRe.exec(text);
+  }
+  
+  return { "results" : output }; 
+};
+
+
+var searchWebstore = function(q, callback) {
+  callback = callback || function(d) {};
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://chrome.google.com/webstore/search?q=" + q);
+  xhr.addEventListener("readystatechange", function() {
+    if(xhr.status == 200 && xhr.readyState == 4) {
+      callback(xhr.responseText);
+    }
+  });
+  xhr.send();
+};
+</script>
+
+  </head>
+  <body>
+  </body>
+</html>
